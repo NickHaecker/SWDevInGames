@@ -32,7 +32,7 @@ using System.Text;
 // }
 
 DateTimeOffset now = DateTimeOffset.Now;
-long timestampInSeconds = now.ToUnixTimeSeconds();
+long timestampInSeconds = now.ToUnixTimeMilliseconds();
 
 Vertex[] vertices = new Vertex[1000000];
 
@@ -44,17 +44,17 @@ for (int i = 0; i < 1000000; i++)
 
 foreach (Vertex v in vertices)
 {
-    Console.WriteLine(v.Position);
+    // Console.WriteLine(v.Position);
 }
 
 DateTimeOffset end = DateTimeOffset.Now;
-long endTime = end.ToUnixTimeSeconds();
+long endTime = end.ToUnixTimeMilliseconds();
 
 Console.WriteLine(endTime - timestampInSeconds);
 
 // struct 77 sekunden, 82
 // class 81 sekunden, 81
-public class Vertex
+public struct Vertex
 {
     public double Position;
     public double Normal;
