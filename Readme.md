@@ -10,7 +10,7 @@
 
 ## Inhalte 
 
-- Generics/Container/Iterator
+- Generics/Collections/Iterator
 - Reflection/DependencyInjection/DoubleDispatch
 - Concurrency/Threads/Async&Await
 - Events/Delegates/Anonymous methods
@@ -47,9 +47,9 @@
 
 ### [Lektion 04](04_Generics)
 
-- Containerklasse für `object`
-- Containerklasse mit generischem Inhalt
-- Indexer für Containerklassen
+- Collection-Klasse für `object`
+- Collection-Klasse mit generischem Inhalt
+- Indexer für Collections
 - Enumerator mit `yield`
 
 ### [Lektion 05](05_Reflection)
