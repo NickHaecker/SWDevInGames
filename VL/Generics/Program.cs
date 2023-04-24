@@ -1,8 +1,18 @@
-﻿int[] arr = new int[4];
+﻿using System.Collections;
+
+int[] arr = new int[4];
 arr[0] = 33;
 arr[1] = 3;
 arr[2] = 333;
 arr[3] = 3333;
+
+int[] arr2 = { 33, 3, 333, 3333 };
+IEnumerator<int> en = ((IEnumerable<int>)arr2).GetEnumerator();
+
+for (en.Reset(); en.MoveNext();)
+{
+    Console.WriteLine($"xd: {en.Current}");
+}
 
 foreach (int i in arr)
 {
@@ -38,6 +48,15 @@ ll.Add(true);
 ll.Add(false);
 ll.Add("33334");
 ll.Add(343334);
+
+
+MyCollection<int> intcol = new MyCollection<int> { 33, 3, 333, 3333 };
+
+MyCollection<int> icol = new MyCollection<int> { };
+icol.Add(3);
+icol.Add(33);
+icol.Add(3333);
+icol.Add(333);
 
 public class Collection
 {
@@ -141,7 +160,7 @@ public class StringCollection
         }
     }
 }
-public class MyCollection<T>
+public class MyCollection<T> : IEnumerable<T>
 {
     private T[] _theObjects;
     private int _n;
@@ -162,6 +181,16 @@ public class MyCollection<T>
             Array.Copy(oldArray, _theObjects, _n);
         }
 
+        // sortiert einfügen
+        // for (int i = 0; i < _theObjects.Length; i++)
+        // {
+        //     if (o.CompareTo(_theObjects[i]) < 0)
+        //     {
+
+        //     }
+        // }
+
+
         _theObjects[_n] = o;
         _n++;
     }
@@ -171,8 +200,47 @@ public class MyCollection<T>
         return _theObjects[i];
     }
 
+    public IEnumerator<T> GetEnumerator()
+    {
+        for (int i = 0; i < _n; i++)
+        {
+            yield return _theObjects[i];
+        }
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        throw new NotImplementedException();
+    }
+
+
     public int Count
     {
         get { return _n; }
+    }
+}
+class MyEnumerator<T> : IEnumerator<T>
+{
+    public MyEnumerator()
+    {
+
+    }
+    public T Current => throw new NotImplementedException();
+
+    object IEnumerator.Current => throw new NotImplementedException();
+
+    public void Dispose()
+    {
+        throw new NotImplementedException();
+    }
+
+    public bool MoveNext()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Reset()
+    {
+        throw new NotImplementedException();
     }
 }
