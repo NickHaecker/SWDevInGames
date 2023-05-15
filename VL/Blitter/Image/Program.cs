@@ -4,6 +4,9 @@ using System.Drawing.Imaging;
 
 Console.WriteLine("Hello, World!");
 
+Image image = new Image("./img/hfu.jpg");
+Console.WriteLine(image);
+image.SaveAs("./img/test.jpg");
 public enum PixFormat
 {
     R8_G8_B8,
@@ -33,10 +36,21 @@ public class Image
         _ => throw new ArgumentException("wrong Pixelformat selected"),
     };
 
+
+    private static void BlitCLip(ref int iSrc, ref int sizeBlock, ref int iDest, int sizeSrc, int sizeDest)
+    {
+        int deltaMin = Math.Min(Math.Min(iSrc, iDest), 0);
+
+        int deltaMax = Math.Max(Math.Max(iSrc + sizeBlock - sizeSrc, iDest + sizeBlock - sizeDest), 0);
+
+        // Wende durch Überlappung entstehende Werte (deltaMin/deltaMax) auf die "ref"-Werte an.
+    }
+
     public void Blit(int xs, int ys, int w, int h, Image dest, int xd, int yd)
     {
 
     }
+
 
     public void SaveAs(string path)
     {
@@ -80,25 +94,63 @@ public class Image
 
     public Image(string path)
     {
-        Bitmap bmp = new Bitmap(path);
-        PixFormat = bmp.PixelFormat switch
+        Bitmap bm = new Bitmap(path);
+        Width = bm.Width;
+        Height = bm.Height;
+
+        PixFormat = bm.PixelFormat switch
         {
             PixelFormat.Format24bppRgb => PixFormat.R8_G8_B8,
             PixelFormat.Format32bppArgb => PixFormat.R8_G8_B8_A8,
-            _ => throw new ArgumentException("")
+            _ => throw new ArgumentException("Unkown pixel format in " + path)
         };
-
-        Width = bmp.Width;
-        Height = bmp.Height;
 
         _pixels = new byte[Width * Height * BytesPerPixel];
 
+        int bpp = BytesPerPixel;
+
+        switch (PixFormat)
+        {
+            case PixFormat.R8_G8_B8:
+                for (int y = 0; y < Height; y++)
+                {
+                    for (int x = 0; x < Width; x++)
+                    {
+                        Color col = bm.GetPixel(x, y);
+
+                        int pixIndex = (y * Width + x) * bpp;
+                        _pixels[pixIndex + 0] = col.R;
+                        _pixels[pixIndex + 1] = col.G;
+                        _pixels[pixIndex + 2] = col.B;
+                    }
+                }
+                break;
+            case PixFormat.R8_G8_B8_A8:
+                for (int y = 0; y < Height; y++)
+                {
+                    for (int x = 0; x < Width; x++)
+                    {
+                        Color col = bm.GetPixel(x, y);
+
+                        int pixIndex = (y * Width + x) * bpp;
+                        _pixels[pixIndex + 0] = col.R;
+                        _pixels[pixIndex + 1] = col.G;
+                        _pixels[pixIndex + 2] = col.B;
+                        _pixels[pixIndex + 3] = col.A;
+                    }
+                }
+                break;
+        }
     }
 
     public Image(int width, int height, PixFormat PixFormat)
     {
         this.PixFormat = PixFormat;
-        _pixels = new byte[width * height * BytesPerPixel];
+
+        Width = width;
+        Height = height;
+
+        _pixels = new byte[Width * Height * BytesPerPixel];
     }
 }
 
