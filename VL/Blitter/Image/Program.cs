@@ -44,8 +44,38 @@ public class Image
         {
             PixFormat.R8_G8_B8 => PixelFormat.Format24bppRgb,
             PixFormat.R8_G8_B8_A8 => PixelFormat.Format32bppArgb,
-            _ => throw new ArgumentException("wrong PixFormat selected"),
+            _ => throw new ArgumentException($"Cannot save pixel format {Enum.GetName<PixFormat>(PixFormat)}.")
         };
+
+        Bitmap bm = new Bitmap(Width, Height, pf);
+
+        int bpp = BytesPerPixel;
+
+        switch (PixFormat)
+        {
+            case PixFormat.R8_G8_B8:
+                for (int y = 0; y < Height; y++)
+                {
+                    for (int x = 0; x < Width; x++)
+                    {
+                        int pixIndex = (y * Width + x) * bpp;
+                        bm.SetPixel(x, y, Color.FromArgb(_pixels[pixIndex + 0], _pixels[pixIndex + 1], _pixels[pixIndex + 2]));
+                    }
+                }
+                break;
+            case PixFormat.R8_G8_B8_A8:
+                for (int y = 0; y < Height; y++)
+                {
+                    for (int x = 0; x < Width; x++)
+                    {
+                        int pixIndex = (y * Width + x) * bpp;
+                        bm.SetPixel(x, y, Color.FromArgb(_pixels[pixIndex + 0], _pixels[pixIndex + 1], _pixels[pixIndex + 2], _pixels[pixIndex + 3]));
+                    }
+                }
+                break;
+        }
+
+        bm.Save(path);
     }
 
     public Image(string path)
@@ -55,6 +85,7 @@ public class Image
         {
             PixelFormat.Format24bppRgb => PixFormat.R8_G8_B8,
             PixelFormat.Format32bppArgb => PixFormat.R8_G8_B8_A8,
+            _ => throw new ArgumentException("")
         };
 
         Width = bmp.Width;
