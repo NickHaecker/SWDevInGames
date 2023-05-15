@@ -27,9 +27,10 @@ public class Image
         PixFormat.R8_G8_B8 => 3,
         PixFormat.R8_G8_B8_A8 => 4,
         PixFormat.I8 => 1,
-        PixFormat.R32_G32_B32 => 3,
-        PixFormat.R32_G32_B32_A32 => 4,
-        PixFormat.I32 => 1,
+        PixFormat.R32_G32_B32 => 3 * 4,
+        PixFormat.R32_G32_B32_A32 => 4 * 4,
+        PixFormat.I32 => 1 * 4,
+        _ => throw new ArgumentException("wrong Pixelformat selected"),
     };
 
     public void Blit(int xs, int ys, int w, int h, Image dest, int xd, int yd)
@@ -37,9 +38,14 @@ public class Image
 
     }
 
-    public void Save(string path)
+    public void SaveAs(string path)
     {
-
+        PixelFormat pf = PixFormat switch
+        {
+            PixFormat.R8_G8_B8 => PixelFormat.Format24bppRgb,
+            PixFormat.R8_G8_B8_A8 => PixelFormat.Format32bppArgb,
+            _ => throw new ArgumentException("wrong PixFormat selected"),
+        };
     }
 
     public Image(string path)
