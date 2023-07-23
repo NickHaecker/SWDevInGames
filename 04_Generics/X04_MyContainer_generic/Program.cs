@@ -68,6 +68,11 @@ namespace X04_MyContainer_generic
             {
                 Console.WriteLine($"Element: {i}");
             }
+            for (int i = 0; i < container.Count; i++)
+            {
+                Console.WriteLine($"Element: {container[i]}");
+                Console.WriteLine($"Element: {container.GetAt(i)}");
+            }
         }
     }
 }
